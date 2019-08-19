@@ -17,10 +17,22 @@ export const getMeso = () =>
       getMeso(id: $id) {
         name
         beginDate
-        endDate        
+        endDate
       }
     }
   `;
+
+export const getMesos = (...params) => {
+  const parameters = Array.prototype.join.call(params, " ");
+
+  return gql`
+  query GetMesos {
+    getMesos
+    {${parameters}} 
+    
+  }
+`;
+};
 
 export const getMesoDay = () =>
   gql`
@@ -55,8 +67,39 @@ export const getMesoDay = () =>
   `;
 
 export const addExercise = () =>
-gql`mutation AddExercise($name: String!, $sets: Int!, $reps: Int!, $weight: String, $date: String!, $mesoId: Int!){
-  addExercise(name:$name,sets:$sets, reps:$reps, weight:$weight, date:$date, mesoId: $mesoId)
-}`;
+  gql`
+    mutation AddExercise(
+      $name: String!
+      $sets: Int!
+      $reps: Int!
+      $weight: String
+      $date: String!
+      $mesoId: Int!
+    ) {
+      addExercise(
+        name: $name
+        sets: $sets
+        reps: $reps
+        weight: $weight
+        date: $date
+        mesoId: $mesoId
+      )
+    }
+  `;
 
-export const addCardio = () => {};
+export const addCardio = () =>
+  gql`
+    mutation AddCardio(
+      $name: String!
+      $timeInMinutes: Int
+      $date: String!
+      $mesoId: Int!
+    ) {
+      addCardio(
+        name: $name
+        timeInMinutes: $timeInMinutes
+        date: $date
+        mesoId: $mesoId
+      )
+    }
+  `;

@@ -17,7 +17,7 @@ export default ({ date, cardios }) => {
             <tr>
               <th>Cardio Name</th>
               <th>Intensity</th>
-              <th>Time</th>
+              <th>Time</th>            
             </tr>
           </thead>
           <tbody>

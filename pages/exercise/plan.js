@@ -1,5 +1,15 @@
 import React, { useState, useCallback } from "react";
-import { Col, Row, Card, CardHeader, CardBody } from "reactstrap";
+import {
+  Col,
+  Row,
+  Card,
+  CardHeader,
+  CardBody,
+  Input,
+  Form,
+  FormGroup,
+  Label
+} from "reactstrap";
 import { Radar as RadarChart } from "react-chartjs-2";
 import { Query } from "react-apollo";
 
@@ -65,7 +75,7 @@ const Plan = ({ query }) => {
       <Query query={getMeso()} variables={{ id: query.id }}>
         {({ data, loading }) => {
           if (loading) return <div>...Loading</div>;
-          const {beginDate, endDate} = data.getMeso;
+          const { name, beginDate, endDate } = data.getMeso;         
           if (!selectedDate) {
             setSelectedDate(new Date(beginDate));
             return <div>Loading...</div>;
@@ -78,12 +88,23 @@ const Plan = ({ query }) => {
             >
               {({ data, loading, refetch }) => {
                 if (!data || loading) return <div>Loading...</div>;
-                console.log(data)
-                const { cardios, exercises } = data.getMesoByDay;                
+                console.log(data);
+                const { cardios, exercises } = data.getMesoByDay;
                 return (
                   <Row>
                     <Col xl="3" lg="12">
                       <div>
+                        <Card>
+                          <CardBody>
+                            <Input
+                              name="mesoName"
+                              id="mesoName"
+                              value={name}
+                              onChange={e => console.log(e.target.value)}
+                            />
+                          </CardBody>
+                        </Card>
+
                         <Card>
                           <CardBody>
                             <Calendar
@@ -95,7 +116,7 @@ const Plan = ({ query }) => {
                             />
                           </CardBody>
                         </Card>
-                        <br />
+
                         <Card className="d-none d-xl-block">
                           <CardHeader>
                             Monthly Weight Volume Distribution

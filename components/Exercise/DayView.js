@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import { Button, Card, CardBody } from "reactstrap";
-import { Mutation, Query } from "react-apollo";
+import { Mutation } from "react-apollo";
 
 import Popup from "@/components/Common/Popup";
-
 import AddExercise from "@/components/Exercise/AddExercise";
 import AddCardio from "@/components/Exercise/AddCardio";
 import Import from "@/components/Exercise/Import";
 import ExerciseList from "@/components/Exercise/ExerciseList";
 import CardioList from "@/components/Exercise/CardioList";
 
-import { addExercise } from "@/graphql/meso";
+import { addExercise, addCardio } from "@/graphql/meso";
 
-const defaultState = {
+const defaultExerciseState = {
   name: "",
   sets: null,
   reps: null,
@@ -20,12 +19,19 @@ const defaultState = {
   muscleGroup: null
 };
 
+const defaultCardioState = {
+  name: "",
+  date: "",
+  intensity: ""
+};
+
 export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
   if (!date) return null;
   const [isShowingAddExercise, setIsShowingAddExercise] = useState(false);
   const [isShowingAddCardio, setIsShowingAddCardio] = useState(false);
   const [isShowingImport, setisShowingImport] = useState(false);
-  const [formObject, setFormObject] = useState(defaultState);
+  const [exerciseObject, setExerciseObject] = useState(defaultExerciseState);
+  const [cardioObject, setCardioObject] = useState(defaultCardioState);
 
   const toggleAddExercise = () => {
     setIsShowingAddExercise(!isShowingAddExercise);
@@ -40,21 +46,23 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
   };
 
   const saveExercise = addExercise => async () => {
-    formObject.date = new Date(`${date.year}-${date.month}-${date.day}`);
-    formObject.mesoId = mesoId;
-
-    console.log(formObject);
-    //   console.log(addExercise);
-    await addExercise({
-      variables: formObject
-    });
+    exerciseObject.date = new Date(`${date.year}-${date.month}-${date.day}`);
+    exerciseObject.mesoId = mesoId;
+    await addExercise({ variables: exerciseObject });
     refetch();
   };
+
+  const saveCardio = addCardio => async () => {
+    cardioObject.date = new Date(`${date.year}-${date.month}-${date.day}`);
+    cardioObject.mesoId = mesoId
+    await addCardio({ variables: cardioObject });
+    refetch();
+  }
 
   return (
     <>
       <Mutation mutation={addExercise()}>
-        {(addExercise, { data }) => {
+        {addExercise => {
           return (
             <Popup
               header="Add Exercise"
@@ -63,20 +71,30 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
               onSave={saveExercise(addExercise)}
             >
               <AddExercise
-                setFormObject={setFormObject}
-                formObject={formObject}
+                setFormObject={setExerciseObject}
+                formObject={exerciseObject}
               />
             </Popup>
           );
         }}
       </Mutation>
-      <Popup
-        header="Add Cardio"
-        toggle={toggleAddCardio}
-        isOpen={isShowingAddCardio}
-      >
-        <AddCardio />
-      </Popup>
+      <Mutation mutation={addCardio()}>
+        {addCardio => {
+          return (
+            <Popup
+              header="Add Cardio"
+              toggle={toggleAddCardio}
+              isOpen={isShowingAddCardio}
+              onSave={saveCardio(addCardio)}
+            >
+              <AddCardio
+                setFormObject={setCardioObject}
+                formObject={cardioObject}
+              />
+            </Popup>
+          );
+        }}
+      </Mutation>
       <Popup
         header="Import"
         toggle={toggleImport}

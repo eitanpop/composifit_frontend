@@ -13,10 +13,10 @@ import {
   Collapse
 } from "reactstrap";
 import { DateRangePicker } from "react-date-range";
-import { Mutation } from "react-apollo";
+import { Mutation, Query } from "react-apollo";
 
 import withAppSyncData from "../../lib/withAppSyncData";
-import { createMeso } from "../../graphql/meso";
+import { createMeso, getMesos } from "../../graphql/meso";
 import ContentWrapper from "@/components/Layout/ContentWrapper";
 import ContentHeader from "@/components/Layout/Page/ContentHeader";
 import ContentBody from "@/components/Layout/Page/ContentBody";
@@ -34,8 +34,6 @@ export default withAppSyncData(() => {
     endDate: new Date(),
     key: "selection"
   });
-
-  console.log(name);
   const toggleClone = () => {
     setIsShowingClone(!isShowingClone);
   };
@@ -44,7 +42,6 @@ export default withAppSyncData(() => {
   };
 
   const saveAndRedirectToEditPage = createMeso => {
-    console.log("saveAndRedirectToEditPage");
     return () => {
       createMeso({
         variables: {
@@ -64,14 +61,7 @@ export default withAppSyncData(() => {
           <small>You can create or copy your mesocycle here</small>
         </div>
       </ContentHeader>
-      <ContentBody>
-        <Popup
-          header="Clone Mesocycle"
-          toggle={toggleClone}
-          isOpen={isShowingClone}
-          saveText="Clone"
-          onSave={() => Router.push("/exercise/plan")}
-        />
+      <ContentBody>       
         <Row>
           <Col
             lg={{ size: "12", offset: 0 }}
@@ -127,7 +117,7 @@ export default withAppSyncData(() => {
                       direction="horizontal"
                       ranges={[selectionRange]}
                       onChange={handleRangeChange}
-                    />{" "}
+                    />
                     <br />
                     <Mutation mutation={createMeso()}>
                       {(createMeso, { data }) => {
@@ -147,7 +137,19 @@ export default withAppSyncData(() => {
                   </Collapse>
                   <Collapse isOpen={isCloneOpen}>
                     <br />
-                    <MesoList />
+                    <Query query={getMesos("id","name","beginDate","endDate")}>
+                      {({ loading, data }) => {
+                        return (
+                          <>
+                            {loading ? (
+                              <div>Loading...</div>
+                            ) : (
+                              <MesoList mesos={data.getMesos} />
+                            )}
+                          </>
+                        );
+                      }}
+                    </Query>
                   </Collapse>
                 </div>
               </CardBody>
