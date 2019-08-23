@@ -1,15 +1,5 @@
 import React, { useState, useCallback } from "react";
-import {
-  Col,
-  Row,
-  Card,
-  CardHeader,
-  CardBody,
-  Input,
-  Form,
-  FormGroup,
-  Label
-} from "reactstrap";
+import { Col, Row, Card, CardHeader, CardBody, Input } from "reactstrap";
 import { Radar as RadarChart } from "react-chartjs-2";
 import { Query } from "react-apollo";
 
@@ -19,19 +9,10 @@ import DayView from "@/components/Exercise/DayView";
 import { getMesoDay, getMeso } from "@/graphql/meso";
 import withAppSyncData from "@/lib/withAppSyncData";
 
-const getDateObject = date => {
-  return {
-    day: date.getDate(),
-    month: date.getMonth() + 1,
-    year: date.getFullYear()
-  };
-};
 const Plan = ({ query }) => {
   const handleDateClick = useCallback(e => {
     setSelectedDate(e);
   });
-
-  console.log(query);
 
   const Radar = {
     data: {
@@ -67,85 +48,74 @@ const Plan = ({ query }) => {
     }
   };
   console.log(query);
-  if (!query) return <div>Loading...</div>;
   const [selectedDate, setSelectedDate] = useState(null);
 
   return (
     <ContentWrapper>
-      <Query query={getMeso()} variables={{ id: query.id }}>
-        {({ data, loading }) => {
-          if (loading) return <div>...Loading</div>;
-          const { name, beginDate, endDate } = data.getMeso;         
+      <Query
+        query={getMesoDay()}
+        variables={{ id: query.id, date: selectedDate }}
+      >
+        {({ data, loading, refetch }) => {
+          if (!data || loading) return <div>Loading...</div>;
+          console.log(data);
+          const { name, beginDate, endDate } = data.getMesoByDay.meso;        
           if (!selectedDate) {
             setSelectedDate(new Date(beginDate));
             return <div>Loading...</div>;
           }
-          const { day, month, year } = getDateObject(selectedDate);
+          const { cardios, exercises } = data.getMesoByDay;
           return (
-            <Query
-              query={getMesoDay()}
-              variables={{ id: query.id, date: `${year}-${month}-${day}` }}
-            >
-              {({ data, loading, refetch }) => {
-                if (!data || loading) return <div>Loading...</div>;
-                console.log(data);
-                const { cardios, exercises } = data.getMesoByDay;
-                return (
-                  <Row>
-                    <Col xl="3" lg="12">
-                      <div>
-                        <Card>
-                          <CardBody>
-                            <Input
-                              name="mesoName"
-                              id="mesoName"
-                              value={name}
-                              onChange={e => console.log(e.target.value)}
-                            />
-                          </CardBody>
-                        </Card>
-
-                        <Card>
-                          <CardBody>
-                            <Calendar
-                              onChange={handleDateClick}
-                              value={selectedDate}
-                              className="border-0"
-                              maxDate={new Date(endDate)}
-                              minDate={new Date(beginDate)}
-                            />
-                          </CardBody>
-                        </Card>
-
-                        <Card className="d-none d-xl-block">
-                          <CardHeader>
-                            Monthly Weight Volume Distribution
-                          </CardHeader>
-                          <CardBody>
-                            <RadarChart
-                              data={Radar.data}
-                              options={Radar.options}
-                              width={600}
-                              height={300}
-                            />
-                          </CardBody>
-                        </Card>
-                      </div>
-                    </Col>
-                    <Col>
-                      <DayView
-                        date={getDateObject(selectedDate)}
-                        exercises={exercises}
-                        cardios={cardios}
-                        mesoId={query.id}
-                        className="ml-3"
-                        refetch={refetch}
+            <Row>
+              <Col xl="3" lg="12">
+                <div>
+                  <Card>
+                    <CardBody>
+                      <Input
+                        name="mesoName"
+                        id="mesoName"
+                        value={name}
+                        onChange={e => console.log(e.target.value)}
                       />
-                    </Col>
-                  </Row>
-                );
-              }}
-            </Query>
+                    </CardBody>
+                  </Card>
+
+                  <Card>
+                    <CardBody>
+                      <Calendar
+                        onChange={handleDateClick}
+                        value={selectedDate}
+                        className="border-0"
+                        maxDate={new Date(endDate)}
+                        minDate={new Date(beginDate)}
+                      />
+                    </CardBody>
+                  </Card>
+
+                  <Card className="d-none d-xl-block">
+                    <CardHeader>Monthly Weight Volume Distribution</CardHeader>
+                    <CardBody>
+                      <RadarChart
+                        data={Radar.data}
+                        options={Radar.options}
+                        width={600}
+                        height={300}
+                      />
+                    </CardBody>
+                  </Card>
+                </div>
+              </Col>
+              <Col>
+                <DayView
+                  date={selectedDate}
+                  exercises={exercises}
+                  cardios={cardios}
+                  mesoId={query.id}
+                  className="ml-3"
+                  refetch={refetch}
+                />
+              </Col>
+            </Row>
           );
         }}
       </Query>

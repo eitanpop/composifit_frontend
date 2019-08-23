@@ -6,15 +6,22 @@ const updateFormObject = (key, formObject, setFormObject) => e => {
 };
 
 export default ({ formObject, setFormObject }) => {
-  const { name, timeInMinutes, intensity } = formObject;
+  const { id, name, timeInMinutes, intensity } = formObject;
   return (
     <Card>
       <Form>
         <FormGroup>
-          <Label for="exerciseName">Cardio Name</Label>
+        <Input
+            name="cardioId"
+            id="cardioId"
+            type="hidden"
+            onChange={updateFormObject("id", formObject, setFormObject)}
+            value={id || ''}
+          />
+          <Label for="cardioName">Cardio Name</Label>
           <Input
-            name="exerciseName"
-            id="exerciseName"
+            name="cardioName"
+            id="cardioName"
             onChange={updateFormObject("name", formObject, setFormObject)}
             value={name || ""}
           />

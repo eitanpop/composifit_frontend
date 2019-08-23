@@ -11,32 +11,37 @@ export const createMeso = () =>
     }
   `;
 
-export const getMeso = () =>
-  gql`
+export const getMeso = (...params) =>
+  getParameterizedGql(params, parameters => {
+    return gql`
     query GetMeso($id: ID!) {
-      getMeso(id: $id) {
-        name
-        beginDate
-        endDate
-      }
+      getMeso(id: $id) 
+        {${parameters}} 
+      
     }
   `;
+  });
 
-export const getMesos = (...params) => {
+  export const getMesos = (...params) =>
+  getParameterizedGql(params, parameters => {
+    return gql`
+    query GetMesos {
+      getMesos
+      {${parameters}}       
+    }
+  `;
+  });
+
+
+
+const getParameterizedGql = (params, getGql) => {
   const parameters = Array.prototype.join.call(params, " ");
-
-  return gql`
-  query GetMesos {
-    getMesos
-    {${parameters}} 
-    
-  }
-`;
+  return getGql(parameters);
 };
 
 export const getMesoDay = () =>
   gql`
-    query GetMesoByDay($id: ID!, $date: String!) {
+    query GetMesoByDay($id: ID!, $date: String) {
       getMesoByDay(id: $id, date: $date) {
         meso {
           id
@@ -69,6 +74,7 @@ export const getMesoDay = () =>
 export const addExercise = () =>
   gql`
     mutation AddExercise(
+      $id: ID
       $name: String!
       $sets: Int!
       $reps: Int!
@@ -77,6 +83,7 @@ export const addExercise = () =>
       $mesoId: Int!
     ) {
       addExercise(
+        id: $id
         name: $name
         sets: $sets
         reps: $reps
@@ -90,12 +97,14 @@ export const addExercise = () =>
 export const addCardio = () =>
   gql`
     mutation AddCardio(
+      $id: ID
       $name: String!
-      $timeInMinutes: Int
+      $timeInMinutes: Int!
       $date: String!
       $mesoId: Int!
     ) {
       addCardio(
+        id: $id
         name: $name
         timeInMinutes: $timeInMinutes
         date: $date

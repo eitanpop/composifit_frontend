@@ -10,12 +10,20 @@ const updateFormObject = (key, formObject, setFormObject) => e => {
 
 
 export default ({formObject, setFormObject}) => {
-  const { name, sets, reps, weight, muscleGroup } = formObject;
+  const { id, name, sets, reps, weight, muscleGroup } = formObject;
 
   return (
     <Card>
       <Form>
         <FormGroup>
+      
+          <Input
+            name="exerciseId"
+            id="exerciseId"
+            type="hidden"
+            onChange={updateFormObject("id", formObject, setFormObject)}
+            value={id || ''}
+          />
           <Label for="exerciseName">Exercise Name</Label>
           <Input
             name="exerciseName"

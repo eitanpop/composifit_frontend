@@ -22,10 +22,8 @@ import ContentHeader from "@/components/Layout/Page/ContentHeader";
 import ContentBody from "@/components/Layout/Page/ContentBody";
 
 import MesoList from "@/components/Exercise/MesoList";
-import Popup from "@/components/Common/Popup";
 
 export default withAppSyncData(() => {
-  const [isShowingClone, setIsShowingClone] = useState(false);
   const [isDateRangeOpen, setDateRangeOpen] = useState(false);
   const [isCloneOpen, setCloneOpen] = useState(false);
   const [name, setName] = useState("");
@@ -34,14 +32,12 @@ export default withAppSyncData(() => {
     endDate: new Date(),
     key: "selection"
   });
-  const toggleClone = () => {
-    setIsShowingClone(!isShowingClone);
-  };
+
   const handleRangeChange = date => {
     setSelectionRange(date.selection);
   };
 
-  const saveAndRedirectToEditPage = createMeso => {
+  const saveMeso = createMeso => {
     return () => {
       createMeso({
         variables: {
@@ -52,7 +48,7 @@ export default withAppSyncData(() => {
       });
     };
   };
-
+  console.log("Router", Router);
   return (
     <ContentWrapper>
       <ContentHeader>
@@ -61,16 +57,12 @@ export default withAppSyncData(() => {
           <small>You can create or copy your mesocycle here</small>
         </div>
       </ContentHeader>
-      <ContentBody>       
+      <ContentBody>
         <Row>
-          <Col
-            lg={{ size: "12", offset: 0 }}
-            md={{ size: "8", offset: 2 }}
-            className=""
-          >
+          <Col lg={{ size: "12", offset: 0 }} md={{ size: "8", offset: 2 }}>
             <Card>
-              <CardBody className="">
-                <div className=" ">
+              <CardBody>
+                <div>
                   <Button
                     color="primary"
                     onClick={() => {
@@ -119,15 +111,18 @@ export default withAppSyncData(() => {
                       onChange={handleRangeChange}
                     />
                     <br />
-                    <Mutation mutation={createMeso()}>
+                    <Mutation
+                      mutation={createMeso()}
+                      onCompleted={data =>
+                        Router.push(`/exercise/plan/${data.createMeso}`)
+                      }
+                    >
                       {(createMeso, { data }) => {
-                        console.log(data);
-                        if (data)
-                          Router.push(`/exercise/plan/${data.createMeso}`);
+                        if (data) return <></>;
                         return (
                           <Button
                             color="primary"
-                            onClick={saveAndRedirectToEditPage(createMeso)}
+                            onClick={saveMeso(createMeso)}
                           >
                             <span className="">SAVE</span>
                           </Button>
@@ -137,7 +132,9 @@ export default withAppSyncData(() => {
                   </Collapse>
                   <Collapse isOpen={isCloneOpen}>
                     <br />
-                    <Query query={getMesos("id","name","beginDate","endDate")}>
+                    <Query
+                      query={getMesos("id", "name", "beginDate", "endDate")}
+                    >
                       {({ loading, data }) => {
                         return (
                           <>

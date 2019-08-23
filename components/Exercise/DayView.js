@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Card, CardBody } from "reactstrap";
 import { Mutation } from "react-apollo";
 
@@ -12,6 +12,7 @@ import CardioList from "@/components/Exercise/CardioList";
 import { addExercise, addCardio } from "@/graphql/meso";
 
 const defaultExerciseState = {
+  id: null,
   name: "",
   sets: null,
   reps: null,
@@ -20,8 +21,9 @@ const defaultExerciseState = {
 };
 
 const defaultCardioState = {
+  id: null,
   name: "",
-  date: "",
+  timeInMinutes: "",
   intensity: ""
 };
 
@@ -46,18 +48,44 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
   };
 
   const saveExercise = addExercise => async () => {
-    exerciseObject.date = new Date(`${date.year}-${date.month}-${date.day}`);
+    exerciseObject.date = date;
     exerciseObject.mesoId = mesoId;
+    console.log("exerciseObject", exerciseObject);
     await addExercise({ variables: exerciseObject });
     refetch();
   };
 
   const saveCardio = addCardio => async () => {
-    cardioObject.date = new Date(`${date.year}-${date.month}-${date.day}`);
-    cardioObject.mesoId = mesoId
+    cardioObject.date = date;
+    cardioObject.mesoId = mesoId;
+    console.log("cardioObject", cardioObject);
     await addCardio({ variables: cardioObject });
     refetch();
-  }
+  };
+
+  const showEditExercise = exercise => () => {
+    const { id, name, sets, reps, weight, muscleGroup } = exercise;
+    setExerciseObject({
+      id,
+      name,
+      sets,
+      reps,
+      weight,
+      muscleGroup
+    });
+    toggleAddExercise();
+  };
+
+  const showEditCardio = cardio => () => {
+    const { id, name, timeInMinutes, intensity } = cardio;
+    setCardioObject({
+      id,
+      name,
+      timeInMinutes,
+      intensity
+    });
+    toggleAddCardio();
+  };
 
   return (
     <>
@@ -105,10 +133,20 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
       </Popup>
       <Card>
         <CardBody>
-          <Button xl="3" color="primary" onClick={toggleAddExercise}>
+          <Button
+            xl="3"
+            color="primary"
+            onClick={() => {
+              setExerciseObject(defaultExerciseState);
+              toggleAddExercise();
+            }}
+          >
             ADD EXERCISE
           </Button>
-          <Button color="dark" className="ml-2" onClick={toggleAddCardio}>
+          <Button color="dark" className="ml-2"  onClick={() => {
+              setCardioObject(defaultCardioState);
+              toggleAddCardio();             
+            }}>
             ADD CARDIO
           </Button>
           <Button color="success" className="ml-2" onClick={toggleImport}>
@@ -122,8 +160,16 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
           </Button>
         </CardBody>
       </Card>
-      <ExerciseList date={date} exercises={exercises} />
-      <CardioList date={date} cardios={cardios} />
+      <ExerciseList
+        date={date}
+        exercises={exercises}
+        exerciseEditCallback={showEditExercise}
+      />
+      <CardioList
+        date={date}
+        cardios={cardios}
+        cardioEditCallback={showEditCardio}
+      />
     </>
   );
 };

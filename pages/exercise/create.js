@@ -1,13 +1,10 @@
 import React, { useCallback } from "react";
-import Router, { withRouter } from "next/router";
+import { Router } from "../../routes";
 import { Container, Row, Col } from "reactstrap";
 
 import ContentWrapper from "@/components/Layout/ContentWrapper";
 import Button from "@/components/Cards/Button";
 
-const routeTo = link => {
-  Router.push(link);
-};
 
 export default () => {
   const routeTo = useCallback(link => () => {

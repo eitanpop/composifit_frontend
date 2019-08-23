@@ -1,9 +1,9 @@
 import React from "react";
 import { Card, CardHeader, CardBody, Table, Button } from "reactstrap";
 
-export default ({ date, exercises }) => {
-  const { day, month, year } = date;
-  const longDateString = `${month}/${day}/${year}`;
+export default ({ date, exercises, exerciseEditCallback }) => {
+  console.log(date)
+  const longDateString = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
   console.log(exercises.map);
   return (
     <Card>
@@ -40,7 +40,7 @@ export default ({ date, exercises }) => {
                     <td>{weight} lbs</td>
                     <td>{muscleGroup}</td>
                     <td align="center">
-                      <Button color="primary">Edit</Button>
+                      <Button color="primary" onClick={exerciseEditCallback(exercise)}>Edit</Button>
                     </td>
                   </tr>
                 );
