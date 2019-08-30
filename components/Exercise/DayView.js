@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Card, CardBody } from "reactstrap";
 import { Mutation } from "react-apollo";
 
@@ -9,16 +9,7 @@ import Import from "@/components/Exercise/Import";
 import ExerciseList from "@/components/Exercise/ExerciseList";
 import CardioList from "@/components/Exercise/CardioList";
 
-import { addExercise, addCardio } from "@/graphql/meso";
-
-const defaultExerciseState = {
-  id: null,
-  name: "",
-  sets: null,
-  reps: null,
-  weight: null,
-  muscleGroup: null
-};
+import { addCardio } from "@/graphql/meso";
 
 const defaultCardioState = {
   id: null,
@@ -32,9 +23,7 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
   const [isShowingAddExercise, setIsShowingAddExercise] = useState(false);
   const [isShowingAddCardio, setIsShowingAddCardio] = useState(false);
   const [isShowingImport, setisShowingImport] = useState(false);
-  const [exerciseObject, setExerciseObject] = useState(defaultExerciseState);
   const [cardioObject, setCardioObject] = useState(defaultCardioState);
-
   const toggleAddExercise = () => {
     setIsShowingAddExercise(!isShowingAddExercise);
   };
@@ -47,14 +36,6 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
     setisShowingImport(!isShowingImport);
   };
 
-  const saveExercise = addExercise => async () => {
-    exerciseObject.date = date;
-    exerciseObject.mesoId = mesoId;
-    console.log("exerciseObject", exerciseObject);
-    await addExercise({ variables: exerciseObject });
-    refetch();
-  };
-
   const saveCardio = addCardio => async () => {
     cardioObject.date = date;
     cardioObject.mesoId = mesoId;
@@ -64,15 +45,6 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
   };
 
   const showEditExercise = exercise => () => {
-    const { id, name, sets, reps, weight, muscleGroup } = exercise;
-    setExerciseObject({
-      id,
-      name,
-      sets,
-      reps,
-      weight,
-      muscleGroup
-    });
     toggleAddExercise();
   };
 
@@ -89,23 +61,11 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
 
   return (
     <>
-      <Mutation mutation={addExercise()}>
-        {addExercise => {
-          return (
-            <Popup
-              header="Add Exercise"
-              toggle={toggleAddExercise}
-              isOpen={isShowingAddExercise}
-              onSave={saveExercise(addExercise)}
-            >
-              <AddExercise
-                setFormObject={setExerciseObject}
-                formObject={exerciseObject}
-              />
-            </Popup>
-          );
-        }}
-      </Mutation>
+      <AddExercise
+        isOpen={isShowingAddExercise}
+        toggle={() => setIsShowingAddExercise(!isShowingAddExercise)}
+        exercise={{ id: 0, date, mesoId }}
+      />
       <Mutation mutation={addCardio()}>
         {addCardio => {
           return (
@@ -135,18 +95,22 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
         <CardBody>
           <Button
             xl="3"
-            color="primary"
+            color="dark"
             onClick={() => {
-              setExerciseObject(defaultExerciseState);
               toggleAddExercise();
+              refetch();
             }}
           >
             ADD EXERCISE
           </Button>
-          <Button color="dark" className="ml-2"  onClick={() => {
+          <Button
+            color="primary"
+            className="ml-2"
+            onClick={() => {
               setCardioObject(defaultCardioState);
-              toggleAddCardio();             
-            }}>
+              toggleAddCardio();
+            }}
+          >
             ADD CARDIO
           </Button>
           <Button color="success" className="ml-2" onClick={toggleImport}>
@@ -154,9 +118,6 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
           </Button>
           <Button color="warning" className="ml-2">
             SYNC
-          </Button>
-          <Button color="danger" className="ml-2 float-right">
-            REMOVE ALL EXERCISES AND CARDIO
           </Button>
         </CardBody>
       </Card>
@@ -173,5 +134,3 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
     </>
   );
 };
-
-// return date && <div >{`${date.month}/${date.day}/${date.year}`}</div>;

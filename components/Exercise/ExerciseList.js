@@ -1,9 +1,13 @@
 import React from "react";
 import { Card, CardHeader, CardBody, Table, Button } from "reactstrap";
 
+import ExerciseHeader from "@/components/Exercise/ExerciseHeader";
+import SortableList from "@/components/Exercise/SortableSets";
+
 export default ({ date, exercises, exerciseEditCallback }) => {
-  console.log(date)
-  const longDateString = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  console.log(date);
+  const longDateString = `${date.getMonth() +
+    1}/${date.getDate()}/${date.getFullYear()}`;
   console.log(exercises.map);
   return (
     <Card>
@@ -12,42 +16,39 @@ export default ({ date, exercises, exerciseEditCallback }) => {
         <span className="pull-right float-right" />
       </CardHeader>
       <CardBody>
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th>Exercise Name</th>
-              <th>Sets</th>
-              <th>Reps</th>
-              <th>Weight</th>
-              <th>Muscle Group</th>
-            </tr>
-          </thead>
-          <tbody>
-            {!exercises.length ? (
-              <>
-                <tr>
-                  <td colSpan="5">Nothing to show here</td>
-                </tr>
-              </>
-            ) : (
-              exercises.map(exercise => {
-                const { name, sets, reps, weight, muscleGroup } = exercise;
-                return (
-                  <tr key={name}>
-                    <td>{name}</td>
-                    <td>{sets}</td>
-                    <td>{reps}</td>
-                    <td>{weight} lbs</td>
-                    <td>{muscleGroup}</td>
-                    <td align="center">
-                      <Button color="primary" onClick={exerciseEditCallback(exercise)}>Edit</Button>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </Table>
+        {!exercises.length ? (
+          <>
+            <div>Nothing to show here</div>
+          </>
+        ) : (
+          exercises.map((exercise, idx) => {
+            const {sets} = exercise;
+            return (
+              <React.Fragment key={exercise.id}>
+                <ExerciseHeader
+                 exercise={exercise}
+                  idx={idx + 1}
+                />
+                {sets.length > 0 ? (
+                  <>
+                    <SortableList sets={sets} />
+                  </>
+                ) : (
+                  <div>No sets</div>
+                )}
+                <Button
+                  color="primary"
+                  onClick={exerciseEditCallback(exercise)}
+                  hidden
+                >
+                  Edit
+                </Button>
+                <br />
+                <br />
+              </React.Fragment>
+            );
+          })
+        )}
       </CardBody>
     </Card>
   );

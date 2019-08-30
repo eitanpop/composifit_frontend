@@ -1,88 +1,83 @@
-import React from "react";
+import React, { useState, useContext } from "react";
+import { Mutation } from "react-apollo";
 import { Card, Form, FormGroup, Label, Input } from "reactstrap";
 
+import Popup from "@/components/Common/Popup";
+import { addExercise } from "@/graphql/meso";
+import MesoRefreshContext from "@/contexts/meso-refresh-context"
 
-
-const updateFormObject = (key, formObject, setFormObject) => e => {
-  setFormObject({ ...formObject, [key]: e.target.value });
-};
-
-
-
-export default ({formObject, setFormObject}) => {
-  const { id, name, sets, reps, weight, muscleGroup } = formObject;
-
+export default ({ exercise, isOpen, toggle }) => {
+  const refresh = useContext(MesoRefreshContext);
+  const [formObject, setFormObject] = useState({ ...exercise });
+  const { id, name, muscleGroup,date,mesoId } = formObject;
+console.log("formObject1", formObject)
   return (
-    <Card>
-      <Form>
-        <FormGroup>
-      
-          <Input
-            name="exerciseId"
-            id="exerciseId"
-            type="hidden"
-            onChange={updateFormObject("id", formObject, setFormObject)}
-            value={id || ''}
-          />
-          <Label for="exerciseName">Exercise Name</Label>
-          <Input
-            name="exerciseName"
-            id="exerciseName"
-            onChange={updateFormObject("name", formObject, setFormObject)}
-            value={name || ''}
-          />
-          <Label for="sets">Sets</Label>
-          <Input
-            type="number"
-            name="sets"
-            id="sets"
-            onChange={updateFormObject("sets", formObject, setFormObject)}
-            value={sets || ''}
-          />
-          <Label for="reps">Reps</Label>
-          <Input
-            type="number"
-            name="reps"
-            id="reps"
-            onChange={updateFormObject("reps", formObject, setFormObject)}
-            value={reps || ''}
-          />
-          <Label for="weight">Weight</Label>
-          <Input
-            type="number"
-            name="weight"
-            id="weight"
-            onChange={updateFormObject("weight", formObject, setFormObject)}
-            value={weight || ''}
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="muscleGroup">Muscle Group</Label>
-          <Input
-            type="select"
-            name="select"
-            id="muscleGroup"
-            onChange={updateFormObject("muscleGroup", formObject, setFormObject)}
-            value={muscleGroup || ''}
+    <Mutation mutation={addExercise()}>
+      {addExercise => {
+        const updateFormObject = property => e => {
+          setFormObject({...formObject,[property]: e.target.value});
+        };
+
+        const saveExercise = async () => {     
+          console.log("exerciseObject", formObject);
+          await addExercise({ variables: formObject });
+          refresh();
+        };
+
+        return (
+          <Popup
+            header={`${id > 0 ? "Edit" : "Add"} Exercise`}
+            toggle={toggle}
+            isOpen={isOpen}
+            onSave={saveExercise}
           >
-            <option>Neck</option>
-            <option>Chest</option>
-            <option>Upper Back</option>
-            <option>Lower Back</option>
-            <option>Traps</option>
-            <option>Lats</option>
-            <option>Biceps</option>
-            <option>Triceps</option>
-            <option>Forearms</option>
-            <option>Abs</option>
-            <option>Glutes</option>
-            <option>Quads</option>
-            <option>Hamstring</option>
-            <option>Calves</option>
-          </Input>
-        </FormGroup>
-      </Form>
-    </Card>
+            <Card>
+              <Form>
+                <FormGroup>
+                  <Input
+                    name="exerciseId"
+                    id="exerciseId"
+                    type="hidden"
+                    value={id || ""}
+                  />
+                  <Label for="exerciseName">Exercise Name</Label>
+                  <Input
+                    name="exerciseName"
+                    id="exerciseName"
+                    onChange={updateFormObject("name")}
+                    value={name || ""}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="muscleGroup">Muscle Group</Label>
+                  <Input
+                    type="select"
+                    name="select"
+                    id="muscleGroup"
+                    onChange={updateFormObject("muscleGroup")}
+                    value={muscleGroup || ""}
+                  >
+                    <option>Neck</option>
+                    <option>Chest</option>
+                    <option>Upper Back</option>
+                    <option>Lower Back</option>
+                    <option>Traps</option>
+                    <option>Lats</option>
+                    <option>Biceps</option>
+                    <option>Triceps</option>
+                    <option>Forearms</option>
+                    <option>Abs</option>
+                    <option>Glutes</option>
+                    <option>Quads</option>
+                    <option>Hamstring</option>
+                    <option>Calves</option>
+                  </Input>
+                </FormGroup>
+              </Form>
+            </Card>
+          </Popup>
+        );
+      }}
+    </Mutation>
   );
-  // return date && <div >{`${date.month}/${date.day}/${date.year}`}</div>;
 };

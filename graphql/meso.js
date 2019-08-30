@@ -1,5 +1,7 @@
 import gql from "graphql-tag";
 
+import getParameterizedGql from "./getParamaterizedGql";
+
 export const createMeso = () =>
   gql`
     mutation CreateMeso(
@@ -34,10 +36,6 @@ export const getMeso = (...params) =>
 
 
 
-const getParameterizedGql = (params, getGql) => {
-  const parameters = Array.prototype.join.call(params, " ");
-  return getGql(parameters);
-};
 
 export const getMesoDay = () =>
   gql`
@@ -52,12 +50,14 @@ export const getMesoDay = () =>
         exercises {
           id
           name
-          date
-          sets
-          reps
-          weight
+          date          
           muscleGroup
           mesoId
+          sets{ 
+            id           
+            reps
+            weight
+          }
         }
         cardios {
           id
@@ -75,21 +75,30 @@ export const addExercise = () =>
   gql`
     mutation AddExercise(
       $id: ID
-      $name: String!
-      $sets: Int!
-      $reps: Int!
-      $weight: String
+      $name: String!      
       $date: String!
       $mesoId: Int!
     ) {
       addExercise(
         id: $id
-        name: $name
-        sets: $sets
-        reps: $reps
-        weight: $weight
+        name: $name      
         date: $date
         mesoId: $mesoId
+      )
+    }
+  `;
+
+  export const addSet = () =>
+  gql`
+    mutation AddSet(      
+      $reps: Int!      
+      $weight: String!
+      $exerciseId: ID!
+    ) {
+      addExercise(      
+        reps: $reps      
+        weight: $weight
+        exerciseId: $exerciseId
       )
     }
   `;

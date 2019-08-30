@@ -34,9 +34,18 @@ const Menu = [
     icon: "icon-note"
   },
   {
-    name: "Create",
-    path: "/exercise/create",
-    icon: "icon-energy"
+    name: "Mesocycle",  
+    icon: "icon-energy",
+    submenu: [
+      {
+        name: "Create",
+        path: "/exercise/create"
+      },
+      {
+        name: "Edit",
+        path: "/exercise/meso"
+      }
+    ]
   },
   {
     name: "Goals",
@@ -48,6 +57,14 @@ const Menu = [
     path: "/exercise/settings",
     icon: "icon-settings",
     label: { value: "+400", color: "success" }
+  },
+  {
+    heading: "Sleep"
+  },
+  {
+    name: "Journal",
+    path: "/sleep/journal",
+    icon: "icon-trophy"
   },
   {
     heading: "Mind"

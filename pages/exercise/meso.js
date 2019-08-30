@@ -133,7 +133,7 @@ export default withAppSyncData(() => {
                   <Collapse isOpen={isCloneOpen}>
                     <br />
                     <Query
-                      query={getMesos("id", "name", "beginDate", "endDate")}
+                      query={getMesos(`id,name,beginDate,endDate`)}
                     >
                       {({ loading, data }) => {
                         return (

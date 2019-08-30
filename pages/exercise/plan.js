@@ -6,8 +6,10 @@ import { Query } from "react-apollo";
 import ContentWrapper from "@/components/Layout/ContentWrapper";
 import Calendar from "@/components/Common/Calendar";
 import DayView from "@/components/Exercise/DayView";
-import { getMesoDay, getMeso } from "@/graphql/meso";
+import { getMesoDay } from "@/graphql/meso";
 import withAppSyncData from "@/lib/withAppSyncData";
+
+import MesoRefreshContext from "@/contexts/meso-refresh-context";
 
 const Plan = ({ query }) => {
   const handleDateClick = useCallback(e => {
@@ -59,63 +61,67 @@ const Plan = ({ query }) => {
         {({ data, loading, refetch }) => {
           if (!data || loading) return <div>Loading...</div>;
           console.log(data);
-          const { name, beginDate, endDate } = data.getMesoByDay.meso;        
+          const { name, beginDate, endDate } = data.getMesoByDay.meso;
           if (!selectedDate) {
             setSelectedDate(new Date(beginDate));
             return <div>Loading...</div>;
           }
           const { cardios, exercises } = data.getMesoByDay;
           return (
-            <Row>
-              <Col xl="3" lg="12">
-                <div>
-                  <Card>
-                    <CardBody>
-                      <Input
-                        name="mesoName"
-                        id="mesoName"
-                        value={name}
-                        onChange={e => console.log(e.target.value)}
-                      />
-                    </CardBody>
-                  </Card>
+            <MesoRefreshContext.Provider value={refetch}>
+              <Row>
+                <Col xl="3" lg="12">
+                  <div>
+                    <Card>
+                      <CardBody>
+                        <Input
+                          name="mesoName"
+                          id="mesoName"
+                          value={name}
+                          onChange={e => console.log(e.target.value)}
+                        />
+                      </CardBody>
+                    </Card>
 
-                  <Card>
-                    <CardBody>
-                      <Calendar
-                        onChange={handleDateClick}
-                        value={selectedDate}
-                        className="border-0"
-                        maxDate={new Date(endDate)}
-                        minDate={new Date(beginDate)}
-                      />
-                    </CardBody>
-                  </Card>
+                    <Card>
+                      <CardBody>
+                        <Calendar
+                          onChange={handleDateClick}
+                          value={selectedDate}
+                          className="border-0"
+                          maxDate={new Date(endDate)}
+                          minDate={new Date(beginDate)}
+                        />
+                      </CardBody>
+                    </Card>
 
-                  <Card className="d-none d-xl-block">
-                    <CardHeader>Monthly Weight Volume Distribution</CardHeader>
-                    <CardBody>
-                      <RadarChart
-                        data={Radar.data}
-                        options={Radar.options}
-                        width={600}
-                        height={300}
-                      />
-                    </CardBody>
-                  </Card>
-                </div>
-              </Col>
-              <Col>
-                <DayView
-                  date={selectedDate}
-                  exercises={exercises}
-                  cardios={cardios}
-                  mesoId={query.id}
-                  className="ml-3"
-                  refetch={refetch}
-                />
-              </Col>
-            </Row>
+                    <Card className="d-none d-xl-block">
+                      <CardHeader>
+                        Monthly Weight Volume Distribution
+                      </CardHeader>
+                      <CardBody>
+                        <RadarChart
+                          data={Radar.data}
+                          options={Radar.options}
+                          width={600}
+                          height={300}
+                        />
+                      </CardBody>
+                    </Card>
+                  </div>
+                </Col>
+                <Col>
+                  <DayView
+                    date={selectedDate}
+                    exercises={exercises}
+                    cardios={cardios}
+                    mesoId={query.id}
+                    className="ml-3"
+                    refetch={refetch}
+                  />
+                </Col>
+              </Row>
+            </MesoRefreshContext.Provider>
           );
         }}
       </Query>

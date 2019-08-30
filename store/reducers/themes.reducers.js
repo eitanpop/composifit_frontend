@@ -1,7 +1,7 @@
 import { CHANGE_THEME } from '../actions/actions';
 
 const initialState = {
-    name: ''
+    name: 'theme-e'
 }
 
 const themesReducer = (state = initialState, action) => {
