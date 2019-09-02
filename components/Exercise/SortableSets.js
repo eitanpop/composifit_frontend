@@ -14,22 +14,38 @@ class Sortable extends Component {
 
   render() {
     const { sets } = this.props;
-    
+
     if (!sets) return <React.Fragment />;
     return (
-      <ListGroup className="sortable" >
+      <ListGroup className="sortable">
         {sets.map(set => {
-            console.log(set)
+          console.log(set);
+          const deleteSet = () => {
+            console.log(set.id);
+          };
           return (
             <ListGroupItem style={{ height: "4rem" }} key={set.id}>
               <Row>
                 <Col>
                   <em className="fas fa-bars fa-fw text-muted fa-2x" />
-                  <span className="ml-2" style={{fontSize:"1rem"}}>{set.reps} Reps</span>
+                  <span className="ml-2" style={{ fontSize: "1rem" }}>
+                    {set.reps} Reps
+                  </span>
                 </Col>
 
-                <Col className="my-auto" style={{fontSize:"1rem"}}>{set.weight} lbs</Col>
-                <Col className="text-right" style={{color:"darkred", fontSize:"1.2rem"}}><em className="fas fa-trash-alt fa-fw " /></Col>
+                <Col className="my-auto" style={{ fontSize: "1rem" }}>
+                  {set.weight} lbs
+                </Col>
+                <Col
+                  className="text-right"
+                  style={{ color: "darkred", fontSize: "1.2rem" }}
+                >
+                  <em
+                    style={{ cursor: "pointer" }}
+                    onClick={deleteSet}
+                    className="fas fa-trash-alt fa-fw "
+                  />
+                </Col>
               </Row>
             </ListGroupItem>
           );

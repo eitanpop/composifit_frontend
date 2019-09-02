@@ -93,12 +93,23 @@ export const addExercise = () =>
     mutation AddSet(      
       $reps: Int!      
       $weight: String!
-      $exerciseId: ID!
+      $exerciseId: Int!
     ) {
-      addExercise(      
+      addSet(      
         reps: $reps      
         weight: $weight
         exerciseId: $exerciseId
+      )
+    }
+  `;
+
+  export const deleteSet = () =>
+  gql`
+    mutation DeleteSet(      
+      $setId: ID!     
+    ) {
+      deleteSet(      
+        setId: $setId           
       )
     }
   `;
