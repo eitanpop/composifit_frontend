@@ -114,6 +114,33 @@ export const addExercise = () =>
     }
   `;
 
+  export const deleteExercise = () =>
+  gql`
+    mutation DeleteExercise(      
+      $exerciseId: ID!     
+    ) {
+      deleteExercise(      
+        exerciseId: $exerciseId           
+      )
+    }
+  `;
+
+  export const clone = () =>
+  gql`
+    mutation Clone(      
+      $mesoId: Int!
+      $fromDate: String!
+      $toDate: String!   
+    ) {
+    	clone(
+        mesoId: $mesoId
+        fromDate: $fromDate
+        toDate: $toDate
+        )
+    }
+  `;
+
+
 export const addCardio = () =>
   gql`
     mutation AddCardio(

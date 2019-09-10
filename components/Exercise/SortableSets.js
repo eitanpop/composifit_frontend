@@ -1,7 +1,15 @@
 import React, { Component } from "react";
+import { Mutation } from "react-apollo";
 import { ListGroup, ListGroupItem, Row, Col } from "reactstrap";
 
-class Sortable extends Component {
+import RefreshContext from "@/contexts/meso-refresh-context"
+
+import { deleteSet } from "@/graphql/meso"
+
+class SortableSets extends Component {
+
+  static contextType = RefreshContext;
+
   componentDidMount() {
     // Sortable
     const sortable = require("html5sortable/dist/html5sortable.amd.js");
@@ -12,6 +20,11 @@ class Sortable extends Component {
     });
   }
 
+  deleteSet = deleteSetFunc => async () => {
+    await deleteSetFunc()
+    this.context()
+  };
+
   render() {
     const { sets } = this.props;
 
@@ -19,10 +32,6 @@ class Sortable extends Component {
     return (
       <ListGroup className="sortable">
         {sets.map(set => {
-          console.log(set);
-          const deleteSet = () => {
-            console.log(set.id);
-          };
           return (
             <ListGroupItem style={{ height: "4rem" }} key={set.id}>
               <Row>
@@ -40,11 +49,17 @@ class Sortable extends Component {
                   className="text-right"
                   style={{ color: "darkred", fontSize: "1.2rem" }}
                 >
-                  <em
-                    style={{ cursor: "pointer" }}
-                    onClick={deleteSet}
-                    className="fas fa-trash-alt fa-fw "
-                  />
+                  <Mutation mutation={deleteSet()} variables={{setId:set.id}}>
+                    {deleteSet => {
+                      return (
+                        <em
+                          style={{ cursor: "pointer" }}
+                          onClick={this.deleteSet(deleteSet)}
+                          className="fas fa-trash-alt fa-fw "
+                        />
+                      );
+                    }}
+                  </Mutation>
                 </Col>
               </Row>
             </ListGroupItem>
@@ -55,4 +70,4 @@ class Sortable extends Component {
   }
 }
 
-export default Sortable;
+export default SortableSets;

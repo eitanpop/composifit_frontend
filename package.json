@@ -19,6 +19,8 @@
         "@fortawesome/fontawesome-free": "5.5.0",
         "animate.css": "3.7.0",
         "apollo-link-http": "^1.5.15",
+        "aws-amplify": "^1.1.38",
+        "aws-amplify-react": "^2.4.2",
         "aws-appsync": "^1.8.1",
         "aws-appsync-react": "^1.2.9",
         "bootstrap": "4.3.1",

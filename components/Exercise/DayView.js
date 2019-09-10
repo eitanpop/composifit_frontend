@@ -22,7 +22,7 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
   if (!date) return null;
   const [isShowingAddExercise, setIsShowingAddExercise] = useState(false);
   const [isShowingAddCardio, setIsShowingAddCardio] = useState(false);
-  const [isShowingImport, setisShowingImport] = useState(false);
+  const [isShowingImport, setIsShowingImport] = useState(false);
   const [cardioObject, setCardioObject] = useState(defaultCardioState);
   const toggleAddExercise = () => {
     setIsShowingAddExercise(!isShowingAddExercise);
@@ -33,7 +33,7 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
   };
 
   const toggleImport = () => {
-    setisShowingImport(!isShowingImport);
+    setIsShowingImport(!isShowingImport);
   };
 
   const saveCardio = addCardio => async () => {
@@ -42,10 +42,6 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
     console.log("cardioObject", cardioObject);
     await addCardio({ variables: cardioObject });
     refetch();
-  };
-
-  const showEditExercise = exercise => () => {
-    toggleAddExercise();
   };
 
   const showEditCardio = cardio => () => {
@@ -83,14 +79,13 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
           );
         }}
       </Mutation>
-      <Popup
-        header="Import"
-        toggle={toggleImport}
+
+      <Import
         isOpen={isShowingImport}
-        saveText="Import"
-      >
-        <Import />
-      </Popup>
+        setIsOpen={setIsShowingImport}
+        mesoId={mesoId}
+        currentDate={date}
+      />
       <Card>
         <CardBody>
           <Button
@@ -121,11 +116,7 @@ export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
           </Button>
         </CardBody>
       </Card>
-      <ExerciseList
-        date={date}
-        exercises={exercises}
-        exerciseEditCallback={showEditExercise}
-      />
+      <ExerciseList date={date} exercises={exercises} />
       <CardioList
         date={date}
         cardios={cardios}

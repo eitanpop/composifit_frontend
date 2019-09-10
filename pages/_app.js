@@ -9,6 +9,12 @@ import React from "react";
 // Redux support
 import { Provider } from "react-redux";
 
+//Amplify support
+import Amplify, {Auth} from "aws-amplify";
+import awsconfig from "@/aws-exports";
+import { Authenticator, Greetings } from "aws-amplify-react";
+Amplify.configure(awsconfig);
+
 import withReduxStore from "../store/with-redux-store";
 // Translation support
 import * as Translate from "@/components/Common/Translate";
@@ -40,14 +46,14 @@ import "../styles/app.scss";
 
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
-
+import Head from '@/components/Layout/Head'
 // https://nextjs.org/docs/#custom-app
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
     const pageProps = Component.getInitialProps
       ? await Component.getInitialProps(ctx)
       : {};
-
+console.log("pageProps",pageProps)
     // Require the initial dictionary.
     // Use require to avoid 'fs' module
     Translate.setDict("en", require("@/static/locales/en/translations.json"));
@@ -56,17 +62,20 @@ class MyApp extends App {
     return { pageProps, store: Translate.store };
   }
 
-  render() {    
+  render() {
     const { Component, pageProps, reduxStore, store } = this.props;
-    const Layout = Component.Layout ? Component.Layout : Base;
+    const Layout = Component.Layout || Base;
     const ComponentWithTranslation = Translate.withTranslation(Component);
     return (
       <Container>
         <Provider store={reduxStore}>
           <Translate.Provider store={store}>
+            <Head />
+            <Authenticator hide={[Greetings]} >
             <Layout>
               <ComponentWithTranslation {...pageProps} />
             </Layout>
+            </Authenticator>
           </Translate.Provider>
         </Provider>
       </Container>

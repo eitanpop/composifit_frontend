@@ -16,6 +16,7 @@ import * as actions from '../../store/actions/actions';
 
 import ToggleFullscreen from '../Common/ToggleFullscreen';
 import HeaderSearch from './HeaderSearch';
+import SignOutButton from "./SignOutButton";
 
 class Header extends Component {
     state = {
@@ -231,6 +232,12 @@ class Header extends Component {
                         <li className="nav-item">
                             <a className="nav-link" href="" onClick={this.toggleOffsidebar}>
                                 <em className="icon-notebook" />
+                            </a>
+                        </li>
+
+                        <li className="nav-item">
+                            <a className="nav-link" href="" >
+                              <SignOutButton />
                             </a>
                         </li>
                         {/* END Offsidebar menu */}

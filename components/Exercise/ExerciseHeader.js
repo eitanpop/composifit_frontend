@@ -1,23 +1,23 @@
 import React from "react";
 
-import EditExerciseButton from "./EditExerciseButton"
+import EditExerciseButton from "./EditExerciseButton";
 
 export default ({ exercise, idx }) => {
-    const { name, muscleGroup, sets} = exercise;
-    
-    const totalWeight =  sets.length > 1
-      ? sets.reduce(
-          (p, c) =>
-            parseFloat(p.weight || 0) + parseFloat(c.weight || 0)
-        )
-      : sets.length == 1
+  const { name, muscleGroup, sets } = exercise;
+  console.log("sets", sets);
+  const totalWeight =
+    sets.length > 1
+      ? sets.reduce((p, c) => p + parseFloat(c.weight || 0), 0)
+      : sets.length === 1
       ? parseFloat(sets[0].weight)
       : 0;
   return (
     <div className="card-body text-center bg-gray-dark">
       <div className="row h-100">
         <div className="col-4 my-auto text-left">
-          <h3 className="m-0">{idx}. {name}</h3>
+          <h3 className="m-0">
+            {idx}. {name}
+          </h3>
         </div>
         <div className="col-2">
           <h3 className="m-0">{sets.length}</h3>
@@ -33,7 +33,7 @@ export default ({ exercise, idx }) => {
         </div>
 
         <div className="col-2 my-auto text-right">
-         <EditExerciseButton exercise={exercise} />
+          <EditExerciseButton exercise={exercise} />
         </div>
       </div>
     </div>

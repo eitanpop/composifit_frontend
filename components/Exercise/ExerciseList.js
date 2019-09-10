@@ -1,10 +1,10 @@
 import React from "react";
-import { Card, CardHeader, CardBody, Table, Button } from "reactstrap";
+import { Card, CardHeader, CardBody } from "reactstrap";
 
 import ExerciseHeader from "@/components/Exercise/ExerciseHeader";
 import SortableList from "@/components/Exercise/SortableSets";
 
-export default ({ date, exercises, exerciseEditCallback }) => {
+export default ({ date, exercises }) => {
   console.log(date);
   const longDateString = `${date.getMonth() +
     1}/${date.getDate()}/${date.getFullYear()}`;
@@ -36,15 +36,8 @@ export default ({ date, exercises, exerciseEditCallback }) => {
                 ) : (
                   <div>No sets</div>
                 )}
-                <Button
-                  color="primary"
-                  onClick={exerciseEditCallback(exercise)}
-                  hidden
-                >
-                  Edit
-                </Button>
-                <br />
-                <br />
+             <br/>
+             <br/>
               </React.Fragment>
             );
           })

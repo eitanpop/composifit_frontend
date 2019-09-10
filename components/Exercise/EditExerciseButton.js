@@ -1,20 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   ButtonDropdown,
   DropdownToggle,
   DropdownItem,
   DropdownMenu
 } from "reactstrap";
+import { Mutation } from "react-apollo";
 
 import EditExercise from "./AddExercise";
-import AddSets from "./AddSets"
+import AddSets from "./AddSets";
+import { deleteExercise } from "@/graphql/meso";
+import RefreshContext from "@/contexts/meso-refresh-context";
 
 export default ({ exercise }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isAddSetsOpen, setIsAddSetsOpen] = useState(false);
-  const [isDeleteExerciseOpen, setIsDeleteExerciseOpen] = useState(false);
-
+  const refresh = useContext(RefreshContext);
   return (
     <>
       <ButtonDropdown
@@ -28,9 +30,27 @@ export default ({ exercise }) => {
           <DropdownItem onClick={() => setIsEditOpen(true)}>
             Edit Exercise
           </DropdownItem>
-          <DropdownItem onClick={() => setIsAddSetsOpen(true)}>Add Sets</DropdownItem>
+          <DropdownItem onClick={() => setIsAddSetsOpen(true)}>
+            Add Sets
+          </DropdownItem>
           <DropdownItem divider />
-          <DropdownItem>Delete Exercise</DropdownItem>
+          <Mutation
+            mutation={deleteExercise()}
+            variables={{ exerciseId: exercise.id }}
+          >
+            {removeExercise => {
+              return (
+                <DropdownItem
+                  onClick={async () => {
+                    await removeExercise();
+                    refresh();
+                  }}
+                >
+                  Delete Exercise
+                </DropdownItem>
+              );
+            }}
+          </Mutation>
         </DropdownMenu>
       </ButtonDropdown>
 

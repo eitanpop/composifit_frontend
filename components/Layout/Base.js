@@ -1,34 +1,32 @@
-import React from 'react';
+import React from "react";
 
-import Head from './Head'
-import Header from './Header'
-import Sidebar from './Sidebar'
-import Offsidebar from './Offsidebar'
-import Footer from './Footer'
-import SettingsProvider from './SettingsProvider'
-import ThemesProvider from './ThemesProvider'
+import Header from "./Header";
+import Sidebar from "./Sidebar";
+import Offsidebar from "./Offsidebar";
+import Footer from "./Footer";
+import SettingsProvider from "./SettingsProvider";
+import ThemesProvider from "./ThemesProvider";
 
-const Base = props => (
+const Base = props => {
+  if (props.authState === "signIn" || props.authState === "loading")
+    return <div />;
+  return (
     <ThemesProvider>
-        <SettingsProvider>
-            <div className="wrapper">
+      <SettingsProvider>
+        <div className="wrapper">
+          <Header />
 
-                <Head />
+          <Sidebar />
 
-                <Header />
+          <Offsidebar />
 
-                <Sidebar />
+          <section className="section-container">{props.children}</section>
 
-                <Offsidebar />
-
-                <section className="section-container">
-                    { props.children }
-                </section>
-
-                <Footer />
-            </div>
-        </SettingsProvider>
+          <Footer />
+        </div>
+      </SettingsProvider>
     </ThemesProvider>
-)
+  );
+};
 
 export default Base;

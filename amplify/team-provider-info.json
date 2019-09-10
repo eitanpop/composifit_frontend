@@ -1,0 +1,26 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "composifit-dev-20190909115207-authRole",
+            "UnauthRoleArn": "arn:aws:iam::000076578678:role/composifit-dev-20190909115207-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::000076578678:role/composifit-dev-20190909115207-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "composifit-dev-20190909115207-deployment",
+            "UnauthRoleName": "composifit-dev-20190909115207-unauthRole",
+            "StackName": "composifit-dev-20190909115207",
+            "StackId": "arn:aws:cloudformation:us-east-1:000076578678:stack/composifit-dev-20190909115207/8a0c4d60-d32a-11e9-9a02-123ad236a92a"
+        },
+        "categories": {
+            "auth": {
+                "composifit58d27f8e": {}
+            },
+            "function": {
+                "composifit58d27f8eCustomMessage": {
+                    "EMAILSUBJECT": "",
+                    "EMAILMESSAGE": "",
+                    "REDIRECTURL": "http://localhost:3000"
+                }
+            }
+        }
+    }
+}

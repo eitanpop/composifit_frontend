@@ -1,0 +1,16 @@
+{
+    "trigger": true,
+    "modules": [
+        "verification-link"
+    ],
+    "parentResource": "composifit58d27f8e",
+    "functionName": "composifit58d27f8eCustomMessage",
+    "parentStack": "auth",
+    "triggerEnvs": "[{\"key\":\"RESOURCENAME\",\"value\":\"resourceName\"}]",
+    "triggerDir": "C:\\Users\\oysta\\AppData\\Roaming\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\amplify-category-auth\\provider-utils\\awscloudformation\\utils/../triggers/CustomMessage",
+    "roleName": "composifit58d27f8eCustomMessage",
+    "triggerTemplate": "CustomMessage.json.ejs",
+    "triggerEventPath": "CustomMessage.event.json",
+    "skipEdit": true,
+    "resourceName": "composifit58d27f8eCustomMessage"
+}
