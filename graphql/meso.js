@@ -105,10 +105,12 @@ export const addExercise = () =>
 
   export const deleteSet = () =>
   gql`
-    mutation DeleteSet(      
-      $setId: ID!     
+    mutation DeleteSet(  
+      $exerciseId: ID!       
+      $setId: ID!  
     ) {
-      deleteSet(      
+      deleteSet( 
+        exerciseId: $exerciseId         
         setId: $setId           
       )
     }

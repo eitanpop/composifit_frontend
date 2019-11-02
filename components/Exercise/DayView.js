@@ -18,8 +18,9 @@ const defaultCardioState = {
   intensity: ""
 };
 
-export default ({ date = null, exercises, cardios, mesoId, refetch }) => {
+export default ({ date, exercises, cardios, mesoId, refetch }) => {
   if (!date) return null;
+
   const [isShowingAddExercise, setIsShowingAddExercise] = useState(false);
   const [isShowingAddCardio, setIsShowingAddCardio] = useState(false);
   const [isShowingImport, setIsShowingImport] = useState(false);

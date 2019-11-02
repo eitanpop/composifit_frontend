@@ -60,7 +60,6 @@ const Plan = ({ query }) => {
       >
         {({ data, loading, refetch }) => {
           if (!data || loading) return <div>Loading...</div>;
-          console.log(data);
           const { name, beginDate, endDate } = data.getMesoByDay.meso;
           if (!selectedDate) {
             setSelectedDate(new Date(beginDate));

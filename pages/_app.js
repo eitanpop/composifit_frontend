@@ -10,7 +10,7 @@ import React from "react";
 import { Provider } from "react-redux";
 
 //Amplify support
-import Amplify, {Auth} from "aws-amplify";
+import Amplify from "aws-amplify";
 import awsconfig from "@/aws-exports";
 import { Authenticator, Greetings } from "aws-amplify-react";
 Amplify.configure(awsconfig);
@@ -46,37 +46,34 @@ import "../styles/app.scss";
 
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
-import Head from '@/components/Layout/Head'
+import Head from "@/components/Layout/Head";
 // https://nextjs.org/docs/#custom-app
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
     const pageProps = Component.getInitialProps
       ? await Component.getInitialProps(ctx)
       : {};
-console.log("pageProps",pageProps)
+    console.log("pageProps for App", pageProps);
     // Require the initial dictionary.
     // Use require to avoid 'fs' module
-    Translate.setDict("en", require("@/static/locales/en/translations.json"));
+    //  Translate.setDict("en", require("@/static/locales/en/translations.json"));
     // The store has been updated in previous call,
     // pass it down as initial prop so client can use it.
-    return { pageProps, store: Translate.store };
+    return { pageProps };
   }
 
   render() {
-    const { Component, pageProps, reduxStore, store } = this.props;
+    const { Component, pageProps, reduxStore } = this.props;
     const Layout = Component.Layout || Base;
-    const ComponentWithTranslation = Translate.withTranslation(Component);
     return (
       <Container>
         <Provider store={reduxStore}>
-          <Translate.Provider store={store}>
-            <Head />
-            <Authenticator hide={[Greetings]} >
+          <Head />
+          <Authenticator hide={[Greetings]}>
             <Layout>
-              <ComponentWithTranslation {...pageProps} />
+              <Component {...pageProps} />
             </Layout>
-            </Authenticator>
-          </Translate.Provider>
+          </Authenticator>
         </Provider>
       </Container>
     );

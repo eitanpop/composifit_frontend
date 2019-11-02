@@ -26,7 +26,7 @@ class SortableSets extends Component {
   };
 
   render() {
-    const { sets } = this.props;
+    const { sets, exercise } = this.props;
 
     if (!sets) return <React.Fragment />;
     return (
@@ -49,7 +49,7 @@ class SortableSets extends Component {
                   className="text-right"
                   style={{ color: "darkred", fontSize: "1.2rem" }}
                 >
-                  <Mutation mutation={deleteSet()} variables={{setId:set.id}}>
+                  <Mutation mutation={deleteSet()} variables={{exerciseId: exercise.id, setId:set.id}}>
                     {deleteSet => {
                       return (
                         <em

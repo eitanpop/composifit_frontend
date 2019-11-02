@@ -31,7 +31,7 @@ export default ({ date, exercises }) => {
                 />
                 {sets.length > 0 ? (
                   <>
-                    <SortableList sets={sets} />
+                    <SortableList sets={sets} exercise={exercise} />
                   </>
                 ) : (
                   <div>No sets</div>

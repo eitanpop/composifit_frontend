@@ -8,7 +8,9 @@ import SettingsProvider from "./SettingsProvider";
 import ThemesProvider from "./ThemesProvider";
 
 const Base = props => {
-  if (props.authState === "signIn" || props.authState === "loading")
+  console.log("authState",props.authState)
+  const {authState } = props;
+   if (authState === "signIn" || authState === "loading" || authState==="signUp" || authState ==="confirmSignUp" || authState==="signedUp")
     return <div />;
   return (
     <ThemesProvider>

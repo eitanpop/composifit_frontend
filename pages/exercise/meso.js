@@ -138,7 +138,7 @@ export default withAppSyncData(() => {
                       {({ loading, data }) => {
                         return (
                           <>
-                            {loading || !data.getMesos ? (
+                            {loading || !data || !data.getMesos ? (
                               <div>Loading...</div>
                             ) : (
                               <MesoList mesos={data.getMesos} />

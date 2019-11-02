@@ -8,9 +8,9 @@ import MesoRefreshContext from "@/contexts/meso-refresh-context"
 
 export default ({ exercise, isOpen, toggle }) => {
   const refresh = useContext(MesoRefreshContext);
-  const [formObject, setFormObject] = useState({ ...exercise });
-  const { id, name, muscleGroup,date,mesoId } = formObject;
-console.log("formObject1", formObject)
+  const [formObject, setFormObject] = useState({ name:exercise.name, muscleGroup:exercise.muscleGroup });
+  const {muscleGroup, name} = formObject;
+  const { id, date,mesoId } = exercise;
   return (
     <Mutation mutation={addExercise()}>
       {addExercise => {
@@ -20,7 +20,8 @@ console.log("formObject1", formObject)
 
         const saveExercise = async () => {     
           console.log("exerciseObject", formObject);
-          await addExercise({ variables: formObject });
+          await addExercise({ variables: {mesoId, date, id, ...formObject}});
+          setFormObject({muscleGroup:"", name:""})
           refresh();
         };
 
